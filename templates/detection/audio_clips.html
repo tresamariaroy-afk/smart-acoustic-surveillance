@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Audio Clips{% endblock %}
+{% block content %}
+<h4 class="mb-3">Captured Audio Clips</h4>
+<div class="card">
+<table class="table table-hover mb-0">
+  <thead><tr><th>Clip ID</th><th>Device / Location</th><th>Time</th><th>Status</th><th>Play</th></tr></thead>
+  <tbody>
+  {% for c in clips %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td>{{ c.device_id }} / {{ c.location }}</td>
+      <td>{{ c.uploaded_at|date:"d M Y H:i" }}</td>
+      <td>{% if c.processed %}<span class="badge bg-success">Processed</span>{% else %}<span class="badge bg-warning text-dark">Pending</span>{% endif %}</td>
+      <td><audio controls src="{{ c.file.url }}" style="height:32px"></audio></td>
+    </tr>
+  {% empty %}<tr><td colspan="5" class="text-center text-muted">No clips</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

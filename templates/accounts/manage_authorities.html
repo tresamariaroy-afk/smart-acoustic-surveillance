@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Manage Authorities{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <h4>Manage Authorities</h4>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+    <i class="bi bi-plus-lg"></i> Add Authority
+  </button>
+</div>
+
+<div class="card">
+<table class="table table-striped mb-0">
+  <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for a in authorities %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ a.get_full_name|default:a.username }}</td>
+      <td>{{ a.email }}</td>
+      <td>{{ a.mobile }}</td>
+      <td>{% if a.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+      <td>
+        <a href="?toggle={{ a.id }}" class="btn btn-sm btn-warning">{% if a.is_active %}Deactivate{% else %}Activate{% endif %}</a>
+        <a href="?delete={{ a.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
+      </td>
+    </tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted">No authorities</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1">
+  <div class="modal-dialog"><form method="post" class="modal-content">
+    {% csrf_token %}
+    <div class="modal-header"><h5>Add Authority</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+    <div class="modal-body">
+      <input name="fullname" class="form-control mb-2" placeholder="Full name" required>
+      <input name="email" type="email" class="form-control mb-2" placeholder="Email" required>
+      <input name="mobile" class="form-control mb-2" placeholder="Mobile" required>
+      <input name="username" class="form-control mb-2" placeholder="Username" required>
+      <input name="password" type="password" class="form-control" placeholder="Password" required>
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary">Save</button></div>
+  </form></div>
+</div>
+{% endblock %}

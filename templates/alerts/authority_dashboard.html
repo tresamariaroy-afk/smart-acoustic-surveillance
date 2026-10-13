@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h4 class="mb-4">Authority Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card stat-card p-3" style="border-color:#dc2626"><small>New Alerts</small><h2>{{ new_count }}</h2></div></div>
+  <div class="col-md-4"><div class="card stat-card p-3"><small>Acknowledged</small><h2>{{ ack_count }}</h2></div></div>
+  <div class="col-md-4"><div class="card stat-card p-3" style="border-color:#16a34a"><small>Resolved</small><h2>{{ resolved_count }}</h2></div></div>
+</div>
+<div class="card">
+  <div class="card-header fw-bold">Latest Alerts</div>
+  <ul class="list-group list-group-flush">
+  {% for a in latest_alerts %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <i class="bi bi-exclamation-octagon-fill text-danger"></i>
+        <strong>{{ a.detection.clip.location }}</strong>
+        <small class="text-muted">{{ a.created_at|timesince }} ago</small>
+      </div>
+      <a href="{% url 'alert_detail' a.id %}" class="btn btn-sm btn-outline-primary">View</a>
+    </li>
+  {% empty %}<li class="list-group-item text-muted">No alerts</li>
+  {% endfor %}
+  </ul>
+</div>
+{% endblock %}

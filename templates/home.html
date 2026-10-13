@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="text-center text-white d-flex flex-column justify-content-center align-items-center"
+     style="min-height:90vh;background:linear-gradient(135deg,#0f172a,#1e40af);">
+  <i class="bi bi-mic-fill display-1 text-danger"></i>
+  <h1 class="fw-bold mt-3">Smart Acoustic Surveillance System</h1>
+  <p class="lead col-md-6">
+    Real-time harmful speech detection in public spaces using Speech-to-Text,
+    TF-IDF and SVM, with instant alerts to security personnel.
+  </p>
+  <a href="{% url 'login' %}" class="btn btn-light btn-lg mt-3 px-5">Login</a>
+</div>
+{% endblock %}

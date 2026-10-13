@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Live Detection{% endblock %}
+{% block content %}
+<h4 class="mb-3">Live Detection / Test</h4>
+<div class="card p-3 mb-3">
+  <form method="post" enctype="multipart/form-data" class="row g-2">
+    {% csrf_token %}
+    <div class="col-md-5"><input type="file" name="audio" class="form-control" accept="audio/*" required></div>
+    <div class="col-md-3"><input name="location" class="form-control" placeholder="Location / Device ID"></div>
+    <div class="col-md-4"><button class="btn btn-danger"><i class="bi bi-mic"></i> Analyze</button></div>
+  </form>
+</div>
+
+{% if result %}
+<div class="row text-center g-3">
+  <div class="col-md-3"><div class="card p-3"><i class="bi bi-file-earmark-music fs-2"></i><h6>1. Audio</h6><small>Received</small></div></div>
+  <div class="col-md-3"><div class="card p-3"><i class="bi bi-card-text fs-2"></i><h6>2. Transcript</h6><small>{{ result.text }}</small></div></div>
+  <div class="col-md-3"><div class="card p-3"><i class="bi bi-cpu fs-2"></i><h6>3. TF-IDF + SVM</h6>
+    <span class="badge {% if result.label == 'harmful' %}bg-danger{% else %}bg-success{% endif %}">{{ result.label|title }}</span>
+    <small>{{ result.confidence|floatformat:2 }}</small></div></div>
+  <div class="col-md-3"><div class="card p-3"><i class="bi bi-bell fs-2"></i><h6>4. Alert</h6>
+    <small>{% if result.label == 'harmful' %}Triggered{% else %}Not required{% endif %}</small></div></div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Alert #{{ alert.id }}{% endblock %}
+{% block content %}
+<a href="{% url 'alerts' %}" class="btn btn-sm btn-outline-secondary mb-3">&larr; Back</a>
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card p-3 mb-3">
+      <h5>Audio Evidence</h5>
+      <audio controls class="w-100" src="{{ alert.detection.clip.file.url }}"></audio>
+    </div>
+    <div class="card p-3">
+      <h5>Transcript</h5>
+      <p class="fs-5">{{ highlighted_text|safe }}</p>
+      <small class="text-muted">Confidence: {{ alert.detection.confidence|floatformat:2 }}</small>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3 mb-3">
+      <h5>Details</h5>
+      <p class="mb-1"><b>Device ID:</b> {{ alert.detection.clip.device_id }}</p>
+      <p class="mb-1"><b>Location:</b> {{ alert.detection.clip.location }}</p>
+      <p class="mb-1"><b>Time:</b> {{ alert.created_at|date:"d M Y H:i" }}</p>
+      <p class="mb-0"><b>Status:</b> {{ alert.get_status_display }}</p>
+    </div>
+    <div class="card p-3">
+      <h5>Update Status</h5>
+      <form method="post">{% csrf_token %}
+        <select name="status" class="form-select mb-2">
+          <option value="new" {% if alert.status == 'new' %}selected{% endif %}>New</option>
+          <option value="acknowledged" {% if alert.status == 'acknowledged' %}selected{% endif %}>Acknowledged</option>
+          <option value="resolved" {% if alert.status == 'resolved' %}selected{% endif %}>Resolved</option>
+        </select>
+        <button class="btn btn-primary w-100">Update</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

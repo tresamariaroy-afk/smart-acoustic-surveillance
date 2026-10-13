@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h4 class="mb-4">Admin Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card stat-card p-3"><small>Total Alerts</small><h2>{{ total_alerts }}</h2></div></div>
+  <div class="col-md-3"><div class="card stat-card p-3" style="border-color:#dc2626"><small>Harmful</small><h2>{{ harmful_count }}</h2></div></div>
+  <div class="col-md-3"><div class="card stat-card p-3" style="border-color:#16a34a"><small>Normal</small><h2>{{ normal_count }}</h2></div></div>
+  <div class="col-md-3"><div class="card stat-card p-3" style="border-color:#f59e0b"><small>Authorities</small><h2>{{ authority_count }}</h2></div></div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card"><div class="card-header fw-bold">Recent Incidents</div>
+      <table class="table table-hover mb-0">
+        <thead><tr><th>ID</th><th>Location</th><th>Time</th><th>Label</th><th>Status</th></tr></thead>
+        <tbody>
+        {% for a in recent_alerts %}
+          <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.detection.clip.location }}</td>
+            <td>{{ a.created_at|date:"d M Y H:i" }}</td>
+            <td><span class="badge bg-danger">Harmful</span></td>
+            <td>{{ a.get_status_display }}</td>
+          </tr>
+        {% empty %}<tr><td colspan="5" class="text-center text-muted">No incidents yet</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card p-3"><canvas id="pie"></canvas></div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('pie'), {
+  type: 'doughnut',
+  data: { labels: ['Harmful','Normal'],
+          datasets: [{ data: [{{ harmful_count }}, {{ normal_count }}],
+                       backgroundColor: ['#dc2626','#16a34a'] }] }
+});
+</script>
+{% endblock %}

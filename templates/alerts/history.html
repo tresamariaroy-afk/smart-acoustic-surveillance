@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Incident History{% endblock %}
+{% block content %}
+<h4 class="mb-3">Incident History</h4>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-md-3"><input type="date" name="from" class="form-control"></div>
+  <div class="col-md-3"><input type="date" name="to" class="form-control"></div>
+  <div class="col-md-3">
+    <select name="status" class="form-select">
+      <option value="">All status</option>
+      <option value="new">New</option>
+      <option value="acknowledged">Acknowledged</option>
+      <option value="resolved">Resolved</option>
+    </select>
+  </div>
+  <div class="col-md-3"><button class="btn btn-primary">Filter</button></div>
+</form>
+<div class="card">
+<table class="table mb-0">
+  <thead><tr><th>ID</th><th>Date</th><th>Location</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for a in alerts %}
+    <tr>
+      <td>{{ a.id }}</td>
+      <td>{{ a.created_at|date:"d M Y H:i" }}</td>
+      <td>{{ a.detection.clip.location }}</td>
+      <td>{{ a.get_status_display }}</td>
+      <td><a href="{% url 'alert_detail' a.id %}" class="btn btn-sm btn-outline-primary">View</a></td>
+    </tr>
+  {% empty %}<tr><td colspan="5" class="text-center text-muted">No history</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
